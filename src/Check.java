@@ -8,7 +8,7 @@ public class Check {
     public static boolean checkTask(HashMap<Integer, Task> tasks, Task task) {
         for (Task t : tasks.values()) {
             if (task.equals(t)) {
-                System.out.println("Задача с таким названием уже существует!");
+                System.out.println("Р—Р°РґР°С‡Р° СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!");
                 return false;
             }
         }
@@ -18,7 +18,7 @@ public class Check {
     public static boolean checkEpic(HashMap<Integer, Epic> epics, Epic epic) {
         for (Epic e : epics.values()) {
             if (epic.equals(e)) {
-                System.out.println("Эпик с таким названием уже существует!");
+                System.out.println("Р­РїРёРє СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!");
                 return false;
             }
         }
@@ -28,7 +28,7 @@ public class Check {
     public static boolean checkSubtask(HashMap<Integer, Subtask> subtasks, Subtask subtask) {
         for (Subtask s : subtasks.values()) {
             if (subtask.equals(s)) {
-                System.out.println("Подзадача с таким названием уже существует!");
+                System.out.println("РџРѕРґР·Р°РґР°С‡Р° СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!");
                 return false;
             }
         }

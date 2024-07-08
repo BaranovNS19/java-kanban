@@ -3,46 +3,46 @@ public class Main {
     public static void main(String[] args) {
         TaskManager taskManager = new TaskManager();
 
-        Task task1 = new Task("Сходить в магазин", "Купить продукты", Status.IN_PROGRESS);
-        Task task2 = new Task("Уборка", "Помыть полы", Status.NEW);
+        Task task1 = new Task("РЎС…РѕРґРёС‚СЊ РІ РјР°РіР°Р·РёРЅ", "РљСѓРїРёС‚СЊ РїСЂРѕРґСѓРєС‚С‹", Status.IN_PROGRESS);
+        Task task2 = new Task("РЈР±РѕСЂРєР°", "РџРѕРјС‹С‚СЊ РїРѕР»С‹", Status.NEW);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
 
-        Epic epic1 = new Epic("Отпуск", "Море", Status.NEW);
-        Epic epic2 = new Epic("Работа", "Расписание", Status.NEW);
+        Epic epic1 = new Epic("РћС‚РїСѓСЃРє", "РњРѕСЂРµ", Status.NEW);
+        Epic epic2 = new Epic("Р Р°Р±РѕС‚Р°", "Р Р°СЃРїРёСЃР°РЅРёРµ", Status.NEW);
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
 
-        Subtask subtask1 = new Subtask("Одежда", "Купить плавки", Status.NEW, epic1.getId());
+        Subtask subtask1 = new Subtask("РћРґРµР¶РґР°", "РљСѓРїРёС‚СЊ РїР»Р°РІРєРё", Status.NEW, epic1.getId());
         taskManager.addSubtasks(subtask1);
         epic1.addSubtaskId(subtask1.getId());
 
-        Subtask subtask2 = new Subtask("Билеты", "бронь", Status.NEW, epic1.getId());
+        Subtask subtask2 = new Subtask("Р‘РёР»РµС‚С‹", "Р±СЂРѕРЅСЊ", Status.NEW, epic1.getId());
         taskManager.addSubtasks(subtask2);
         epic1.addSubtaskId(subtask2.getId());
 
-        Subtask subtask3 = new Subtask("График", "Календарь", Status.NEW, epic2.getId());
+        Subtask subtask3 = new Subtask("Р“СЂР°С„РёРє", "РљР°Р»РµРЅРґР°СЂСЊ", Status.NEW, epic2.getId());
         taskManager.addSubtasks(subtask3);
         epic2.addSubtaskId(subtask3.getId());
 
-        System.out.println("Задачи: " + taskManager.getTasks());
-        System.out.println("Эпики: " + taskManager.getEpics());
-        System.out.println("Подзадачи: " + taskManager.getSubtasks());
+        System.out.println("Р—Р°РґР°С‡Рё: " + taskManager.getTasks());
+        System.out.println("Р­РїРёРєРё: " + taskManager.getEpics());
+        System.out.println("РџРѕРґР·Р°РґР°С‡Рё: " + taskManager.getSubtasks());
 
-        taskManager.updateTask(1, new Task("Сходить в магазин", "Купить продукты", Status.DONE));
-        taskManager.updateEpic(3, new Epic("Отпуск", "Море", Status.DONE));
-        taskManager.updateSubtask(7, new Subtask("График", "Календарь", Status.NEW, epic2.getId()));
+        taskManager.updateTask(1, new Task("РЎС…РѕРґРёС‚СЊ РІ РјР°РіР°Р·РёРЅ", "РљСѓРїРёС‚СЊ РїСЂРѕРґСѓРєС‚С‹", Status.DONE));
+        taskManager.updateEpic(3, new Epic("РћС‚РїСѓСЃРє", "РњРѕСЂРµ", Status.DONE));
+        taskManager.updateSubtask(7, new Subtask("Р“СЂР°С„РёРє", "РљР°Р»РµРЅРґР°СЂСЊ", Status.NEW, epic2.getId()));
 
-        System.out.println("Задачи: " + taskManager.getTasks());
-        System.out.println("Эпики: " + taskManager.getEpics());
-        System.out.println("Подзадачи: " + taskManager.getSubtasks());
+        System.out.println("Р—Р°РґР°С‡Рё: " + taskManager.getTasks());
+        System.out.println("Р­РїРёРєРё: " + taskManager.getEpics());
+        System.out.println("РџРѕРґР·Р°РґР°С‡Рё: " + taskManager.getSubtasks());
 
         taskManager.removeTaskById(1);
         taskManager.removeEpicById(3);
 
-        System.out.println("Задачи: " + taskManager.getTasks());
-        System.out.println("Эпики: " + taskManager.getEpics());
-        System.out.println("Подзадачи: " + taskManager.getSubtasks());
+        System.out.println("Р—Р°РґР°С‡Рё: " + taskManager.getTasks());
+        System.out.println("Р­РїРёРєРё: " + taskManager.getEpics());
+        System.out.println("РџРѕРґР·Р°РґР°С‡Рё: " + taskManager.getSubtasks());
 
 
     }

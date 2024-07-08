@@ -63,44 +63,44 @@ public class TaskManager {
 
     public void removeAllTasks() {
         tasks.clear();
-        System.out.println("Список задач пуст!");
+        System.out.println("РЎРїРёСЃРѕРє Р·Р°РґР°С‡ РїСѓСЃС‚!");
     }
 
     public void removeAllEpics() {
         epics.clear();
         subtasks.clear();
-        System.out.println("Эпики и подзадачи удалены!");
+        System.out.println("Р­РїРёРєРё Рё РїРѕРґР·Р°РґР°С‡Рё СѓРґР°Р»РµРЅС‹!");
     }
 
     public void removeAllSubtasks() {
         subtasks.clear();
-        System.out.println("Подзадачи удалены!");
+        System.out.println("РџРѕРґР·Р°РґР°С‡Рё СѓРґР°Р»РµРЅС‹!");
     }
 
     public void removeTaskById(int id) {
         if (Check.checkId(tasks, id)) {
             tasks.remove(id);
-            System.out.println("Задача с идентификатором " + id + " удалена!");
+            System.out.println("Р—Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " СѓРґР°Р»РµРЅР°!");
         } else {
-            System.out.println("Задача с идентификатором " + id + " отсутствует!");
+            System.out.println("Р—Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!");
         }
     }
 
     public void removeEpicById(int id) {
         if (Check.checkIdEpics(epics, id)) {
             epics.remove(id);
-            System.out.println("Эпик с идентификатором " + id + " удален!");
+            System.out.println("Р­РїРёРє СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " СѓРґР°Р»РµРЅ!");
         } else {
-            System.out.println("Эпик с идентификатором " + id + " отсутствует!");
+            System.out.println("Р­РїРёРє СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!");
         }
     }
 
     public void removeSubtasksById(int id) {
         if (Check.checkIdSubtasks(subtasks, id)) {
             subtasks.remove(id);
-            System.out.println("Подзадача с идентификатором " + id + " удалена!");
+            System.out.println("РџРѕРґР·Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " СѓРґР°Р»РµРЅР°!");
         } else {
-            System.out.println("Подзадача с идентификатором " + id + " отсутствует!");
+            System.out.println("РџРѕРґР·Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!");
         }
     }
 
@@ -132,9 +132,9 @@ public class TaskManager {
         if (Check.checkId(tasks, id)) {
             task.setId(id);
             tasks.put(id, task);
-            System.out.println("Задача с идентификатором " + id + " обновлена!");
+            System.out.println("Р—Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕР±РЅРѕРІР»РµРЅР°!");
         } else {
-            System.out.println("Задача с идентификатором " + id + " отсутствует!");
+            System.out.println("Р—Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!");
         }
     }
 
@@ -143,9 +143,9 @@ public class TaskManager {
             epic.setId(id);
             addStatusEpic(epic);
             epics.put(id, epic);
-            System.out.println("Эпик с идентификатором " + id + " обновлен!");
+            System.out.println("Р­РїРёРє СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕР±РЅРѕРІР»РµРЅ!");
         } else {
-            System.out.println("Эпик с идентификатором " + id + " отсутствует!");
+            System.out.println("Р­РїРёРє СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!");
         }
     }
 
@@ -153,20 +153,20 @@ public class TaskManager {
         if (Check.checkIdSubtasks(subtasks, id)) {
             subtask.setId(id);
             subtasks.put(id, subtask);
-            System.out.println("Подзадача с идентификатором " + id + " обновлена!");
+            System.out.println("РџРѕРґР·Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕР±РЅРѕРІР»РµРЅР°!");
         } else {
-            System.out.println("Подзадача с идентификатором " + id + " отсутствует!");
+            System.out.println("РџРѕРґР·Р°РґР°С‡Р° СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј " + id + " РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚!");
         }
     }
 
     public ArrayList<Subtask> getSubtaskByEpic(Epic epic) {
         ArrayList<Subtask> subtaskName = new ArrayList<>();
         if (epic.subtasksId.isEmpty()) {
-            System.out.println("У данного эпика отсутствуют подзадачи");
+            System.out.println("РЈ РґР°РЅРЅРѕРіРѕ СЌРїРёРєР° РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ РїРѕРґР·Р°РґР°С‡Рё");
         } else {
             for (int id : epic.subtasksId) {
                 subtaskName.add(subtasks.get(id));
-                System.out.println("Получили список подзадач: " + subtaskName);
+                System.out.println("РџРѕР»СѓС‡РёР»Рё СЃРїРёСЃРѕРє РїРѕРґР·Р°РґР°С‡: " + subtaskName);
             }
         }
         return subtaskName;
