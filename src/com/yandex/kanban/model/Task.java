@@ -1,3 +1,5 @@
+package com.yandex.kanban.model;
+
 import java.util.Objects;
 
 public class Task {
@@ -13,6 +15,10 @@ public class Task {
         this.status = status;
     }
 
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public int getId() {
         return id;
@@ -46,6 +52,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{name=" + name + ", description=" + description + ", id=" + id + ", status=" + status + "}";
+        return "com.yandex.kanban.model.Task{name=" + name + ", description=" + description + ", id=" + id + ", status=" + status + "}";
     }
 }

@@ -1,4 +1,12 @@
+package com.yandex.kanban.service;
+
+import com.yandex.kanban.model.Epic;
+import com.yandex.kanban.model.Status;
+import com.yandex.kanban.model.Subtask;
+import com.yandex.kanban.model.Task;
+
 import java.util.HashMap;
+import java.util.Set;
 
 public class Check {
     private Check() {
@@ -60,6 +68,20 @@ public class Check {
             }
         }
         return false;
+    }
+
+    public static Status CheckStatus(Set<Status> statuses) {
+        if (statuses.contains(Status.NEW) && (!statuses.contains(Status.DONE))
+                && (!statuses.contains(Status.IN_PROGRESS))) {
+            return Status.NEW;
+        } else if (statuses.isEmpty()) {
+            return Status.NEW;
+        } else if (statuses.contains(Status.DONE) && (!statuses.contains(Status.IN_PROGRESS))
+                && (!statuses.contains(Status.NEW))) {
+            return Status.DONE;
+        }
+        return Status.IN_PROGRESS;
+
     }
 
 }
