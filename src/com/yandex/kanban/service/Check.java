@@ -6,6 +6,7 @@ import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class Check {
