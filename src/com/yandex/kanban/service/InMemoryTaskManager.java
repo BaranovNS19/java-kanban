@@ -64,6 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtask.setStatus(epic.getStatus());
             epic.addSubtaskId(subtask.getId());
             subtasks.put(id, subtask);
+            addStatusEpic(epic);
             return id;
         }
         return 0;
@@ -160,29 +161,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getTasks() {
-        List<Task> task = new ArrayList<>();
-        for (Task t : tasks.values()) {
-            task.add(t);
-        }
-        return task;
+        return new ArrayList<>(tasks.values());
     }
 
     @Override
     public List<Epic> getEpics() {
-        List<Epic> epic = new ArrayList<>();
-        for (Epic e : epics.values()) {
-            epic.add(e);
-        }
-        return epic;
+        return new ArrayList<>(epics.values());
     }
 
     @Override
     public List<Subtask> getSubtasks() {
-        List<Subtask> subtask = new ArrayList<>();
-        for (Subtask s : subtasks.values()) {
-            subtask.add(s);
-        }
-        return subtask;
+        return new ArrayList<>(subtasks.values());
     }
 
     @Override
