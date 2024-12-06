@@ -7,7 +7,7 @@ import com.yandex.kanban.model.Task;
 
 import java.util.*;
 
-public class InMemoryTaskManager implements TaskManager {//, HistoryManager
+public class InMemoryTaskManager implements TaskManager {
     private int generateId;
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
