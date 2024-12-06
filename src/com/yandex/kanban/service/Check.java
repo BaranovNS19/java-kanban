@@ -6,7 +6,6 @@ import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 public class Check {
@@ -71,7 +70,7 @@ public class Check {
         return false;
     }
 
-    public static Status CheckStatus(Set<Status> statuses) {
+    public static Status checkStatus(Set<Status> statuses) {
         if (statuses.contains(Status.NEW) && (!statuses.contains(Status.DONE))
                 && (!statuses.contains(Status.IN_PROGRESS))) {
             return Status.NEW;

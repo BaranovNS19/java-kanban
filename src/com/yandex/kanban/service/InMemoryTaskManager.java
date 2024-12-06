@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void addStatusEpic(Epic epic) {
         Set<Status> statuses = new HashSet<>(getAllStatus());
-        epic.setStatus(Check.CheckStatus(statuses));
+        epic.setStatus(Check.checkStatus(statuses));
 
     }
 
