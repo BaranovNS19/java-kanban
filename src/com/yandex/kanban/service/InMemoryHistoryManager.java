@@ -2,34 +2,131 @@ package com.yandex.kanban.service;
 
 import com.yandex.kanban.model.Task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
+    private static CustomLinkedList customHistory;
 
-    private final List<Task> history = new ArrayList<>();
-
-    private static final int MAX_SIZE_HISTORY = 10;
+    public InMemoryHistoryManager() {
+        customHistory = new CustomLinkedList();
+    }
 
     @Override
-    public void addTask(Task task) {
-        updateHistory(history);
-        history.add(task);
+    public void addTaskInHistory(Task task) {
+        customHistory.add(task);
     }
 
     @Override
     public List<Task> getHistory() {
-        return history;
-    }
-
-    public void updateHistory(List<Task> tasksHistory) {
-        if (tasksHistory.size() >= MAX_SIZE_HISTORY) {
-            tasksHistory.remove(0);
-        }
+        return customHistory.getAllTasks();
     }
 
     @Override
-    public String toString(){
-        return "История просмотра: " + history;
+    public void remove(int id) {
+        customHistory.remove(id);
+    }
+
+    @Override
+    public String toString() {
+        return "РСЃС‚РѕСЂРёСЏ РїСЂРѕСЃРјРѕС‚СЂР°: " + customHistory;
+    }
+
+    static class CustomLinkedList {
+        public Node head;
+        public Node tail;
+        private int size = 0;
+        private final HashMap<Integer, Node> customMap;
+
+
+        public CustomLinkedList() {
+            this.head = null;
+            this.tail = null;
+            this.customMap = new HashMap<>();
+        }
+
+        public void add(Task task) {
+            if (customMap.containsKey(task.getId())) {
+                remove(task);
+                size--;
+            }
+            Node newNode = new Node(task);
+
+            if (tail == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                newNode.prev = tail;
+                tail = newNode;
+            }
+            customMap.put(task.getId(), newNode);
+            size++;
+        }
+
+        public int size() {
+            return size;
+        }
+
+        public void remove(Task task) {
+            if (!customMap.containsKey(task.getId())) {
+                return;
+            }
+
+            Node nodeToRemove = customMap.get(task.getId());
+
+            if (nodeToRemove.prev != null) {
+                nodeToRemove.prev.next = nodeToRemove.next;
+            } else {
+                head = nodeToRemove.next;
+            }
+
+            if (nodeToRemove.next != null) {
+                nodeToRemove.next.prev = nodeToRemove.prev;
+            } else {
+                tail = nodeToRemove.prev;
+            }
+
+            customMap.remove(task.getId());
+        }
+
+        public void remove(int id) {
+            if (!customMap.containsKey(id)) {
+                return;
+            }
+
+            Node nodeToRemove = customMap.get(id);
+
+            if (nodeToRemove.prev != null) {
+                nodeToRemove.prev.next = nodeToRemove.next;
+            } else {
+                head = nodeToRemove.next;
+            }
+
+            if (nodeToRemove.next != null) {
+                nodeToRemove.next.prev = nodeToRemove.prev;
+            } else {
+                tail = nodeToRemove.prev;
+            }
+
+            customMap.remove(id);
+        }
+
+        public ArrayList<Task> getAllTasks() {
+            ArrayList<Task> tasks = new ArrayList<>();
+            Node current = head;
+
+            while (current != null) {
+                tasks.add(current.data);
+                current = current.next;
+            }
+            return tasks;
+        }
+
+        public boolean isEmpty() {
+            if (size != 0) {
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -114,6 +114,7 @@ class InMemoryTaskManagerTest {
     void removeSubtaskByIdTest(){
         Assertions.assertTrue(taskManager.getSubtasks().isEmpty());
         epic = new Epic("testName", "testDescription");
+        taskManager.addEpic(epic);
         subtask = new Subtask("testName", "testDescription", epic.getId());
         Subtask subtask1 = new Subtask("testName1", "testDescription", epic.getId());
         taskManager.addSubtasks(subtask, epic);

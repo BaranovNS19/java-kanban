@@ -7,15 +7,20 @@ import com.yandex.kanban.model.Task;
 
 import java.util.*;
 
-public class InMemoryTaskManager implements TaskManager {
+public class InMemoryTaskManager implements TaskManager {//, HistoryManager
     private int generateId;
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final InMemoryHistoryManager inMemoryHistoryManager;
 
-    private final List<Task> history = new ArrayList<>();
+    public InMemoryTaskManager() {
+        inMemoryHistoryManager = new InMemoryHistoryManager();
+    }
 
-    private static final int MAX_SIZE_HISTORY = 10;
+    public InMemoryHistoryManager getInMemoryHistoryManager() {
+        return inMemoryHistoryManager;
+    }
 
     @Override
     public int addTask(Task task) {
@@ -62,6 +67,7 @@ public class InMemoryTaskManager implements TaskManager {
             final int id = ++generateId;
             subtask.setId(id);
             subtask.setStatus(epic.getStatus());
+            subtask.setEpicId(epic.getId());
             epic.addSubtaskId(subtask.getId());
             subtasks.put(id, subtask);
             addStatusEpic(epic);
@@ -97,6 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean removeTaskById(int id) {
         if (Check.checkId(tasks, id)) {
             tasks.remove(id);
+            inMemoryHistoryManager.remove(id);
             return true;
         }
         return false;
@@ -114,8 +121,10 @@ public class InMemoryTaskManager implements TaskManager {
             }
             for (int idSubtask : subtaskByEpic) {
                 subtasks.remove(idSubtask);
+                inMemoryHistoryManager.remove(idSubtask);
             }
             epics.remove(id);
+            inMemoryHistoryManager.remove(id);
             return true;
         }
         return false;
@@ -133,6 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
             subtasks.remove(id);
             addStatusEpic(epic);
+            inMemoryHistoryManager.remove(id);
             return true;
         }
         return false;
@@ -140,22 +150,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        updateHistory(history);
-        history.add(tasks.get(id));
+        inMemoryHistoryManager.addTaskInHistory(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        updateHistory(history);
-        history.add(epics.get(id));
+        inMemoryHistoryManager.addTaskInHistory(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        updateHistory(history);
-        history.add(subtasks.get(id));
+        inMemoryHistoryManager.addTaskInHistory(subtasks.get(id));
         return subtasks.get(id);
     }
 
@@ -216,16 +223,4 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return subtaskName;
     }
-
-    @Override
-    public List<Task> getHistory() {
-        return history;
-    }
-
-    public void updateHistory(List<Task> tasksHistory) {
-        if (tasksHistory.size() >= MAX_SIZE_HISTORY) {
-            tasksHistory.remove(0);
-        }
-    }
-
 }
