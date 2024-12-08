@@ -5,36 +5,36 @@ import com.yandex.kanban.model.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static CustomLinkedList customHistory;
+    private static CustomLinkedList historyMap;
 
     public InMemoryHistoryManager() {
-        customHistory = new CustomLinkedList();
+        historyMap = new CustomLinkedList();
     }
 
     @Override
-    public void addTaskInHistory(Task task) {
-        customHistory.add(task);
+    public void add(Task task) {
+        historyMap.linkLast(task);
     }
 
     @Override
     public List<Task> getHistory() {
-        return customHistory.getAllTasks();
+        return historyMap.getTasks();
     }
 
     @Override
     public void remove(int id) {
-        customHistory.remove(id);
+        historyMap.remove(id);
     }
 
     @Override
     public String toString() {
-        return "История просмотра: " + customHistory;
+        return "История просмотра: " + historyMap;
     }
 
     static class CustomLinkedList {
         public Node head;
         public Node tail;
-        private int size = 0;
+        private int historySize = 0;
         private final HashMap<Integer, Node> customMap;
 
 
@@ -44,10 +44,10 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.customMap = new HashMap<>();
         }
 
-        public void add(Task task) {
+        public void linkLast(Task task) {
             if (customMap.containsKey(task.getId())) {
                 remove(task);
-                size--;
+                historySize--;
             }
             Node newNode = new Node(task);
 
@@ -60,11 +60,11 @@ public class InMemoryHistoryManager implements HistoryManager {
                 tail = newNode;
             }
             customMap.put(task.getId(), newNode);
-            size++;
+            historySize++;
         }
 
-        public int size() {
-            return size;
+        public int getHistorySize() {
+            return historySize;
         }
 
         public void remove(Task task) {
@@ -111,7 +111,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             customMap.remove(id);
         }
 
-        public ArrayList<Task> getAllTasks() {
+        public ArrayList<Task> getTasks() {
             ArrayList<Task> tasks = new ArrayList<>();
             Node current = head;
 
@@ -123,7 +123,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         public boolean isEmpty() {
-            if (size != 0) {
+            if (historySize != 0) {
                 return false;
             }
             return true;

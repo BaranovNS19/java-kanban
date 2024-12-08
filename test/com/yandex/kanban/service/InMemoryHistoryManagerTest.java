@@ -20,7 +20,7 @@ public class InMemoryHistoryManagerTest {
         task = new Task("testName", "testDescription");
         taskManager.addTask(task);
         Assertions.assertTrue(inMemoryHistoryManager.getHistory().isEmpty());
-        inMemoryHistoryManager.addTaskInHistory(task);
+        inMemoryHistoryManager.add(task);
     }
 
     @Test
@@ -28,18 +28,18 @@ public class InMemoryHistoryManagerTest {
         Assertions.assertEquals(1, inMemoryHistoryManager.getHistory().size());
         epic = new Epic("testName", "testDescription");
         taskManager.addEpic(epic);
-        inMemoryHistoryManager.addTaskInHistory(epic);
+        inMemoryHistoryManager.add(epic);
         Assertions.assertEquals(2, inMemoryHistoryManager.getHistory().size());
         subtask = new Subtask("testName", "testDescription", epic.getId());
         taskManager.addSubtasks(subtask, epic);
-        inMemoryHistoryManager.addTaskInHistory(subtask);
+        inMemoryHistoryManager.add(subtask);
         Assertions.assertEquals(3, inMemoryHistoryManager.getHistory().size());
     }
 
     @Test
     public void addIdenticalTasks() {
         Assertions.assertEquals(1, inMemoryHistoryManager.getHistory().size());
-        inMemoryHistoryManager.addTaskInHistory(task);
+        inMemoryHistoryManager.add(task);
         Assertions.assertEquals(1, inMemoryHistoryManager.getHistory().size());
     }
 
@@ -47,10 +47,10 @@ public class InMemoryHistoryManagerTest {
     public void remove() {
         epic = new Epic("testName", "testDescription");
         taskManager.addEpic(epic);
-        inMemoryHistoryManager.addTaskInHistory(epic);
+        inMemoryHistoryManager.add(epic);
         subtask = new Subtask("testName", "testDescription", epic.getId());
         taskManager.addSubtasks(subtask, epic);
-        inMemoryHistoryManager.addTaskInHistory(subtask);
+        inMemoryHistoryManager.add(subtask);
         Assertions.assertEquals(3, inMemoryHistoryManager.getHistory().size());
         inMemoryHistoryManager.remove(task.getId());
         Assertions.assertEquals(2, inMemoryHistoryManager.getHistory().size());

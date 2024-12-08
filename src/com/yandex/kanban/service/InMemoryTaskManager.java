@@ -150,19 +150,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        inMemoryHistoryManager.addTaskInHistory(tasks.get(id));
+        inMemoryHistoryManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
-        inMemoryHistoryManager.addTaskInHistory(epics.get(id));
+        inMemoryHistoryManager.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        inMemoryHistoryManager.addTaskInHistory(subtasks.get(id));
+        inMemoryHistoryManager.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
