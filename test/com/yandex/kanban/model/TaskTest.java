@@ -11,7 +11,7 @@ class TaskTest {
         task1.setId(1);
         Task task2 = new Task("testName", "testDescription1234");
         task2.setId(1);
-        Assertions.assertEquals(task1, task2, "Объекты не равны!");
+        Assertions.assertEquals(task1, task2, "РћР±СЉРµРєС‚С‹ РЅРµ СЂР°РІРЅС‹!");
     }
 
 }

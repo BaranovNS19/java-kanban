@@ -1,7 +1,5 @@
 package com.yandex.kanban.service;
 
-import com.yandex.kanban.model.Task;
-
 public class Managers<T extends TaskManager> {
     public TaskManager getDefault() {
         return null;
