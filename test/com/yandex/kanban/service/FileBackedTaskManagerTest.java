@@ -6,8 +6,11 @@ import com.yandex.kanban.model.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class FileBackedTaskManagerTest {
 
@@ -17,13 +20,25 @@ public class FileBackedTaskManagerTest {
         tempFile.deleteOnExit();
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
         Task task = new Task("testName", "testDescription");
+        String strTask = "1,TASK,testName,null,testDescription,";
         Epic epic = new Epic("testEpicName", "testDescription");
+        String strEpic = "2,EPIC,testEpicName,NEW,testDescription,";
         Subtask subtask = new Subtask("testSubtaskName", "testDescription", epic.getId());
+        String strSubtask = "3,SUBTASK,testSubtaskName,NEW,testDescription,2";
         fileBackedTaskManager.addTask(task);
         fileBackedTaskManager.addEpic(epic);
         fileBackedTaskManager.addSubtasks(subtask, epic);
         Assertions.assertTrue(tempFile.length() > 0);
-
+        FileReader fileReader = new FileReader(tempFile);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        LinkedList<String> fileContents = new LinkedList<>();
+        while (bufferedReader.ready()) {
+            String line = bufferedReader.readLine();
+            fileContents.add(line);
+        }
+        Assertions.assertEquals(strTask, fileContents.getFirst());
+        Assertions.assertEquals(strEpic, fileContents.get(1));
+        Assertions.assertEquals(strSubtask, fileContents.get(2));
     }
 
     @Test

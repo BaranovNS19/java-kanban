@@ -203,8 +203,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public String toStringTask(Task task) {
-        String type = task.getClass().toString().substring(task.getClass().toString()
-                .lastIndexOf(".") + 1).toUpperCase();
+        String type;
+        if (task instanceof Epic) {
+            type = Type.EPIC.toString();
+        } else if (task instanceof Subtask) {
+            type = Type.SUBTASK.toString();
+        } else {
+            type = Type.TASK.toString();
+        }
         return String.format("%d,%s,%s,%s,%s,%s%n", task.getId(), type, task.getName(), task.getStatus(),
                 task.getDescription(), task instanceof Subtask ? ((Subtask) task).getEpicId() : "");
     }
@@ -220,12 +226,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     if (arr[1].equals(Type.TASK.toString())) {
                         fileBackedTaskManager.addTask(fromString(line));
                     } else if (arr[1].equals(Type.EPIC.toString())) {
-                        fileBackedTaskManager.addEpic((Epic) fromString(line));
+                        if (fromString(line) instanceof Epic) {
+                            fileBackedTaskManager.addEpic((Epic) fromString(line));
+                        }
                     } else if (arr[1].equals(Type.SUBTASK.toString())) {
-                        Subtask subtask = (Subtask) fromString(line);
-                        Epic epic = fileBackedTaskManager.getEpicById(subtask.getEpicId());
-                        epic.addSubtaskId(subtask.getId());
-                        fileBackedTaskManager.addSubtasks(subtask, epic);
+                        if (fromString(line) instanceof Subtask subtask) {
+                            Epic epic = fileBackedTaskManager.getEpicById(subtask.getEpicId());
+                            epic.addSubtaskId(subtask.getId());
+                            fileBackedTaskManager.addSubtasks(subtask, epic);
+                        }
                     }
                 }
             }
