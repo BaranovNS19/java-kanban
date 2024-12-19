@@ -1,48 +1,38 @@
 package com.yandex.kanban;
 
 import com.yandex.kanban.model.Epic;
+import com.yandex.kanban.model.Status;
 import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
-import com.yandex.kanban.service.InMemoryTaskManager;
+import com.yandex.kanban.service.FileBackedTaskManager;
+
+import java.io.File;
 import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        Task task = new Task("Покупка", "Купить хлеб");
-        Task task1 = new Task("Автоматизация", "Автоматизировать задачу");
-        taskManager.addTask(task);
-        taskManager.addTask(task1);
+        File file = new File("src/com/yandex/kanban/file/manager.CSV");
+        FileBackedTaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
+        System.out.println("Задачи: " + fileBackedTaskManager.getTasks());
+        System.out.println("Эпики: " + fileBackedTaskManager.getEpics());
+        System.out.println("Подзадачи: " + fileBackedTaskManager.getSubtasks());
+        Task task = new Task("New", "по работать");
+        fileBackedTaskManager.addTask(task);
+        Epic epic = new Epic("История", "Яндекс");
+        fileBackedTaskManager.addEpic(epic);
+        Epic epic1 = new Epic("NEW Эпик", "ЭПИК");
+        fileBackedTaskManager.addEpic(epic1);
+        Subtask subtask = new Subtask("НОВАЯ ПОДЗАДАЧА2", "ПОДЗАДАЧА", epic1.getId());
+        fileBackedTaskManager.addSubtasks(subtask, epic1);
+        Task task1 = new Task("Поход", "Купить хлеб");
+        fileBackedTaskManager.addTask(task1);
+        Task task2 = new Task("Очень новая", "Задача", Status.NEW);
+        fileBackedTaskManager.addTask(task2);
 
-        Epic epic = new Epic("MVP", "Релиз");
-        taskManager.addEpic(epic);
-
-        Subtask subtask = new Subtask("Анализ", "Написать требования", epic.getId());
-        taskManager.addSubtasks(subtask, epic);
-        Subtask subtask1 = new Subtask("Разработка", "Написать код", epic.getId());
-        taskManager.addSubtasks(subtask1, epic);
-        Subtask subtask2 = new Subtask("Тестирование", "Протестировать", epic.getId());
-        taskManager.addSubtasks(subtask2, epic);
-
-        Epic epic1 = new Epic("Покупка", "Купить телефон");
-        taskManager.addEpic(epic1);
-
-        taskManager.getEpicById(epic.getId());
-        taskManager.getTaskById(task.getId());
-        taskManager.getSubtaskById(subtask2.getId());
-        taskManager.getSubtaskById(subtask.getId());
-        taskManager.getSubtaskById(subtask1.getId());
-        taskManager.getTaskById(task1.getId());
-        taskManager.getEpicById(epic1.getId());
-        taskManager.getSubtaskById(subtask2.getId());
-        taskManager.getTaskById(task.getId());
-        taskManager.getSubtaskById(subtask1.getId());
-        printHistory(taskManager.getInMemoryHistoryManager().getHistory());
-        taskManager.removeTaskById(task1.getId());
-        printHistory(taskManager.getInMemoryHistoryManager().getHistory());
-        taskManager.removeEpicById(epic.getId());
-        printHistory(taskManager.getInMemoryHistoryManager().getHistory());
+        System.out.println("Задачи: " + fileBackedTaskManager.getTasks());
+        System.out.println("Эпики: " + fileBackedTaskManager.getEpics());
+        System.out.println("Подзадачи: " + fileBackedTaskManager.getSubtasks());
     }
 
     public static void printHistory(List<Task> tasks) {
