@@ -1,11 +1,6 @@
-1,TASK,Работа,null,по работать,
-2,TASK,Магаз,null,Купить хлеб,
-3,TASK,Новая,NEW,Задача,
-4,TASK,New,null,по работать,
-5,TASK,Поход,null,Купить хлеб,
-6,TASK,Очень новая,NEW,Задача,
-7,EPIC,Курсы,NEW,Яндекс,
-8,EPIC,НОВЫЙ ЭПИК,NEW,ЭПИК,
-9,EPIC,История,NEW,Яндекс,
-10,EPIC,NEW Эпик,NEW,ЭПИК,
-11,SUBTASK,НОВАЯ ПОДЗАДАЧА2,NEW,ПОДЗАДАЧА,8
+3,TASK,UPDATE2,null,UPDATE,,2055-01-16T19:07:18.751617700,PT15M
+4,TASK,4Newhello,null,world,,2030-01-16T19:07:18.736858500,PT15M
+5,TASK,3Newtaska,null,aaaabbbbv,,2025-01-16T19:09:18.736858500,PT10M
+6,TASK,1NewДата,null,Время,,null,null
+1,EPIC,First,NEW,Epic,,null,null
+2,SUBTASK,name,NEW,description,1,null,null

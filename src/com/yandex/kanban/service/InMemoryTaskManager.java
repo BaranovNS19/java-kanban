@@ -5,7 +5,9 @@ import com.yandex.kanban.model.Status;
 import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private int generateId;
@@ -13,6 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
     private final InMemoryHistoryManager inMemoryHistoryManager;
+    private final TreeSet<Task> allTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
     public InMemoryTaskManager() {
         inMemoryHistoryManager = new InMemoryHistoryManager();
@@ -27,7 +30,13 @@ public class InMemoryTaskManager implements TaskManager {
         if (Check.checkTask(tasks, task)) {
             final int id = ++generateId;
             task.setId(id);
-            tasks.put(id, task);
+            if (task.getStartTime() == null) {
+                tasks.put(id, task);
+            }
+            if (task.getStartTime() != null && Check.checkStartTimeIntersection(allTasks, task)) {
+                tasks.put(id, task);
+                allTasks.add(task);
+            }
             return id;
         }
         return 0;
@@ -69,9 +78,20 @@ public class InMemoryTaskManager implements TaskManager {
             subtask.setStatus(epic.getStatus());
             subtask.setEpicId(epic.getId());
             epic.addSubtaskId(subtask.getId());
+            if (epic.getStartTime() != null && Check.checkStartTime(subtask.getStartTime())) {
+                epic.setStartTime(epic.getStartTimeForEpic());
+                epic.addSubtaskIdAndStartTime(subtask.getId(), subtask.getStartTime());
+            }
             subtasks.put(id, subtask);
             addStatusEpic(epic);
+            if (epic.getStartTime() != null && Check.checkStartTime(subtask.getStartTime())) {
+                epic.setEndTime(epic.getStartTime().plus(getDurationForEpic(epic)));
+            }
+            if (subtask.getStartTime() != null) {
+                allTasks.add(subtask);
+            }
             return id;
+
         }
         return 0;
     }
@@ -79,6 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public boolean removeAllTasks() {
         tasks.clear();
+        allTasks.removeIf(t -> !(t instanceof Epic) && !(t instanceof Subtask));
         return true;
     }
 
@@ -86,6 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
     public boolean removeAllEpics() {
         epics.clear();
         subtasks.clear();
+        allTasks.removeIf(t -> (t instanceof Epic) || (t instanceof Subtask));
         return true;
     }
 
@@ -96,12 +118,14 @@ public class InMemoryTaskManager implements TaskManager {
             epic.clearSubtasksId();
             addStatusEpic(epic);
         }
+        allTasks.removeIf(t -> (t instanceof Subtask));
         return true;
     }
 
     @Override
     public boolean removeTaskById(int id) {
         if (Check.checkId(tasks, id)) {
+            allTasks.remove(getTaskById(id));
             tasks.remove(id);
             inMemoryHistoryManager.remove(id);
             return true;
@@ -120,6 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
                 }
             }
             for (int idSubtask : subtaskByEpic) {
+                allTasks.removeIf(t -> (t instanceof Subtask) && t.getId() == idSubtask);
                 subtasks.remove(idSubtask);
                 inMemoryHistoryManager.remove(idSubtask);
             }
@@ -140,6 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
                     epic.removeSubtaskId(i);
                 }
             }
+            allTasks.removeIf(t -> (t instanceof Subtask) && t.getId() == id);
             subtasks.remove(id);
             addStatusEpic(epic);
             inMemoryHistoryManager.remove(id);
@@ -187,9 +213,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateTask(int id, Task task) {
-        if (Check.checkId(tasks, id)) {
+        if (Check.checkId(tasks, id) && Check.checkStartTimeIntersection(allTasks, task)) {
             task.setId(id);
             tasks.put(id, task);
+            allTasks.removeIf(t -> (t.getId() == id));
+            allTasks.add(task);
             return true;
         }
         return false;
@@ -209,10 +237,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateSubtask(int id, Subtask subtask, Epic epic) {
-        if (Check.checkIdSubtasks(subtasks, id)) {
+        if (Check.checkIdSubtasks(subtasks, id) && Check.checkStartTimeIntersection(allTasks, subtask)) {
             subtask.setId(id);
             addStatusEpic(epic);
             subtasks.put(id, subtask);
+            allTasks.removeIf(t -> (t instanceof Subtask) && t.getId() == id);
+            allTasks.add(subtask);
             return true;
         }
         return false;
@@ -220,11 +250,21 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public ArrayList<Subtask> getSubtaskByEpic(Epic epic) {
-        ArrayList<Subtask> subtaskName = new ArrayList<>();
-        for (int id : epic.getSubtasksId()) {
-            subtaskName.add(subtasks.get(id));
-            System.out.println("Получили список подзадач: " + subtaskName);
-        }
-        return subtaskName;
+        List<Subtask> subtaskName = epic.getSubtasksId().stream()
+                .map(subtasks::get)
+                .collect(Collectors.toList());
+        System.out.println("Получили список подзадач: " + subtaskName);
+        return (ArrayList<Subtask>) subtaskName;
     }
+
+    public Duration getDurationForEpic(Epic epic) {
+        return getSubtaskByEpic(epic).stream()
+                .map(Subtask::getDuration)
+                .reduce(Duration.ZERO, Duration::plus);
+    }
+
+    public TreeSet<Task> getPrioritizedTasks() {
+        return allTasks;
+    }
+
 }

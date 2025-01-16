@@ -61,7 +61,7 @@ public class InMemoryHistoryManagerTest {
     @Test
     public void getHistory() {
         Assertions.assertEquals(1, inMemoryHistoryManager.getHistory().size());
-        Assertions.assertEquals(1, inMemoryHistoryManager.getHistory().get(0).getId());
+        Assertions.assertEquals(1, inMemoryHistoryManager.getHistory().getFirst().getId());
     }
 
 
