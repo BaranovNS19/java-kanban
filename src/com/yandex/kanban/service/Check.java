@@ -123,8 +123,8 @@ public class Check {
 
                 }
             } else {
-                System.out.println("Планирование возможно с " + calendar.getSTART_CALENDAR() + " по "
-                        + calendar.getEND_CALENDAR() + " интервал задачи с " + task.getStartTime() + " по "
+                System.out.println("Планирование возможно с " + calendar.getStartCalendar() + " по "
+                        + calendar.getEndCalendar() + " интервал задачи с " + task.getStartTime() + " по "
                         + task.getEndTime());
                 return false;
             }
@@ -135,10 +135,10 @@ public class Check {
 
 
     private static boolean checkCalendarBoundaries(Calendar calendar, Task task) {
-        return task.getStartTime().isEqual(calendar.getSTART_CALENDAR())
-                || task.getStartTime().isAfter(calendar.getEND_CALENDAR())
-                && task.getEndTime().isEqual(calendar.getEND_CALENDAR())
-                || task.getEndTime().isBefore(calendar.getEND_CALENDAR());
+        return task.getStartTime().isEqual(calendar.getStartCalendar())
+                || task.getStartTime().isAfter(calendar.getEndCalendar())
+                && task.getEndTime().isEqual(calendar.getEndCalendar())
+                || task.getEndTime().isBefore(calendar.getEndCalendar());
     }
 
 }
