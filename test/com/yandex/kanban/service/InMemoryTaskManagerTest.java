@@ -3,7 +3,9 @@ package com.yandex.kanban.service;
 import com.yandex.kanban.model.Epic;
 import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -152,16 +154,19 @@ class InMemoryTaskManagerTest {
     @Test
     public void getPrioritizedTasks() {
         task = new Task("testNameTask", "description", Duration.ofMinutes(10), LocalDateTime.now()
-                .plusYears(1));
+                .plusMonths(1));
         epic = new Epic("testNameEpic", "description");
         taskManager.addEpic(epic);
         Task task1 = new Task("testNameTask1", "description", Duration.ofMinutes(10), LocalDateTime.now()
-                .plusYears(5));
+                .plusMonths(3));
         subtask = new Subtask("testNameSubtask", "description", Duration.ofMinutes(10), LocalDateTime
-                .now().plusYears(10), epic.getId());
+                .now().plusMonths(7), epic.getId());
         taskManager.addSubtasks(subtask, epic);
         taskManager.addTask(task);
         taskManager.addTask(task1);
+        for (Task t : taskManager.getPrioritizedTasks()){
+            System.out.println("-" + t);
+        }
         Assertions.assertEquals(task, taskManager.getPrioritizedTasks().getFirst());
         Assertions.assertEquals(subtask, taskManager.getPrioritizedTasks().getLast());
     }

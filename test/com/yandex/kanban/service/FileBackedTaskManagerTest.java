@@ -54,7 +54,7 @@ public class FileBackedTaskManagerTest {
         Epic epic = new Epic("НОВЫЙ ЭПИК", "ЭПИК");
         epic.setId(8);
         Subtask subtask = new Subtask("под", "ПОДЗАДАЧА", Status.NEW, Duration.ofMinutes(20),
-                LocalDateTime.of(2025, 02, 20, 18, 06, 02), 8);
+                LocalDateTime.of(2025, 2, 20, 18, 6, 2), 8);
         subtask.setId(11);
         Task resultTask = FileBackedTaskManager.fromString(testDadaTask);
         Assertions.assertEquals(task, resultTask);
