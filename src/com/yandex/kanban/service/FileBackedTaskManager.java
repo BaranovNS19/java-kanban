@@ -3,6 +3,9 @@ package com.yandex.kanban.service;
 import com.yandex.kanban.model.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,25 +178,48 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static Task fromString(String value) {
         String[] arr = value.split(",");
         int id = Integer.parseInt(arr[0]);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
         if (arr[1].equals(Type.TASK.toString())) {
-            if (arr[3].equals("null")) {
+            if (arr[3].equals("null") && arr[6].equals("null")) {
                 Task task = new Task(arr[2], arr[4]);
                 task.setId(id);
                 return task;
+            } else if (!arr[6].equals("null") && arr[3].equals("null")) {
+                Task task = new Task(arr[2], arr[4], Duration.parse(arr[7]), LocalDateTime.parse(arr[6], formatter));
+                task.setId(id);
+                return task;
+            } else if (arr[6].equals("null")) {
+                Task task = new Task(arr[2], arr[4], Status.valueOf(arr[3]));
+                task.setId(id);
+                return task;
+            } else {
+                Task task = new Task(arr[2], arr[4], Status.valueOf(arr[3]), Duration.parse(arr[7]),
+                        LocalDateTime.parse(arr[6], formatter));
+                task.setId(id);
+                return task;
             }
-            Task task = new Task(arr[2], arr[4], Status.valueOf(arr[3]));
-            task.setId(id);
-            return task;
+
         } else if (arr[1].equals(Type.SUBTASK.toString())) {
-            if (arr[3].equals("null")) {
+            if (arr[3].equals("null") && arr[6].equals("null")) {
                 Subtask subtask = new Subtask(arr[2], arr[4], Integer.parseInt(arr[5]));
                 subtask.setId(id);
                 return subtask;
+            } else if (!arr[6].equals("null") && arr[3].equals("null")) {
+                Subtask subtask = new Subtask(arr[2], arr[4], Duration.parse(arr[7]),
+                        LocalDateTime.parse(arr[6], formatter), Integer.parseInt(arr[5]));
+                subtask.setId(id);
+                return subtask;
+            } else if (arr[6].equals("null")) {
+                Subtask subtask = new Subtask(arr[2], arr[4], Status.valueOf(arr[3]), Integer.parseInt(arr[5]));
+                subtask.setId(id);
+                return subtask;
+            } else {
+                Subtask subtask = new Subtask(arr[2], arr[4], Status.valueOf(arr[3]), Duration.parse(arr[7]),
+                        LocalDateTime.parse(arr[6], formatter), Integer.parseInt(arr[5]));
+                subtask.setId(id);
+                return subtask;
             }
-            Subtask subtask = new Subtask(arr[2], arr[4], Status.valueOf(arr[3]), Integer.parseInt(arr[5]));
-            subtask.setId(id);
-            return subtask;
         } else {
             Epic epic = new Epic(arr[2], arr[4]);
             epic.setId(id);
@@ -211,8 +237,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         } else {
             type = Type.TASK.toString();
         }
-        return String.format("%d,%s,%s,%s,%s,%s%n", task.getId(), type, task.getName(), task.getStatus(),
-                task.getDescription(), task instanceof Subtask ? ((Subtask) task).getEpicId() : "");
+        return String.format("%d,%s,%s,%s,%s,%s,%s,%s%n", task.getId(), type, task.getName(), task.getStatus(),
+                task.getDescription(), task instanceof Subtask ? ((Subtask) task).getEpicId() : "",
+                task.getStartTime(), task.getDuration());
     }
 
     public static FileBackedTaskManager loadFromFile(File file) {

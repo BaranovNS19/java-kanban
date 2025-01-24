@@ -1,6 +1,7 @@
 package com.yandex.kanban.service;
 
 import com.yandex.kanban.model.Epic;
+import com.yandex.kanban.model.Status;
 import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
 import org.junit.jupiter.api.Assertions;
@@ -10,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 public class FileBackedTaskManagerTest {
@@ -20,11 +23,11 @@ public class FileBackedTaskManagerTest {
         tempFile.deleteOnExit();
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
         Task task = new Task("testName", "testDescription");
-        String strTask = "1,TASK,testName,null,testDescription,";
+        String strTask = "1,TASK,testName,null,testDescription,,null,null";
         Epic epic = new Epic("testEpicName", "testDescription");
-        String strEpic = "2,EPIC,testEpicName,NEW,testDescription,";
+        String strEpic = "2,EPIC,testEpicName,NEW,testDescription,,null,null";
         Subtask subtask = new Subtask("testSubtaskName", "testDescription", epic.getId());
-        String strSubtask = "3,SUBTASK,testSubtaskName,NEW,testDescription,2";
+        String strSubtask = "3,SUBTASK,testSubtaskName,NEW,testDescription,2,null,null";
         fileBackedTaskManager.addTask(task);
         fileBackedTaskManager.addEpic(epic);
         fileBackedTaskManager.addSubtasks(subtask, epic);
@@ -43,14 +46,15 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void fromString() {
-        String testDadaTask = "1,TASK,Работа,null,по работать,";
+        String testDadaTask = "1,TASK,Работа,null,по работать,,null,null";
         String testDataEpic = "8,EPIC,НОВЫЙ ЭПИК,NEW,ЭПИК,";
-        String testDataSubtask = "11,SUBTASK,НОВАЯ ПОДЗАДАЧА2,NEW,ПОДЗАДАЧА,8";
+        String testDataSubtask = "11,SUBTASK,под,IN_PROGRESS,задача,1,2025-02-20T18:06:02.107800400,PT1H10M";
         Task task = new Task("Работа", "по работать");
         task.setId(1);
         Epic epic = new Epic("НОВЫЙ ЭПИК", "ЭПИК");
         epic.setId(8);
-        Subtask subtask = new Subtask("НОВАЯ ПОДЗАДАЧА2", "ПОДЗАДАЧА", 8);
+        Subtask subtask = new Subtask("под", "ПОДЗАДАЧА", Status.NEW, Duration.ofMinutes(20),
+                LocalDateTime.of(2025, 2, 20, 18, 6, 2), 8);
         subtask.setId(11);
         Task resultTask = FileBackedTaskManager.fromString(testDadaTask);
         Assertions.assertEquals(task, resultTask);
@@ -58,6 +62,8 @@ public class FileBackedTaskManagerTest {
         Assertions.assertEquals(epic, resultEpic);
         Task resultSubtask = FileBackedTaskManager.fromString(testDataSubtask);
         Assertions.assertEquals(subtask, resultSubtask);
+        System.out.println(subtask);
+        System.out.println(resultSubtask);
     }
 
     @Test
@@ -70,9 +76,9 @@ public class FileBackedTaskManagerTest {
         epic.setId(8);
         Subtask subtask = new Subtask("НОВАЯ ПОДЗАДАЧА2", "ПОДЗАДАЧА", 8);
         subtask.setId(11);
-        String testDadaTask = "1,TASK,Работа,null,по работать,";
-        String testDataEpic = "8,EPIC,НОВЫЙ ЭПИК,null,ЭПИК,";
-        String testDataSubtask = "11,SUBTASK,НОВАЯ ПОДЗАДАЧА2,null,ПОДЗАДАЧА,8";
+        String testDadaTask = "1,TASK,Работа,null,по работать,,null,null";
+        String testDataEpic = "8,EPIC,НОВЫЙ ЭПИК,null,ЭПИК,,null,null";
+        String testDataSubtask = "11,SUBTASK,НОВАЯ ПОДЗАДАЧА2,null,ПОДЗАДАЧА,8,null,null";
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(tempFile);
         Assertions.assertEquals(testDadaTask, fileBackedTaskManager.toStringTask(task).trim());
         Assertions.assertEquals(testDataEpic, fileBackedTaskManager.toStringTask(epic).trim());

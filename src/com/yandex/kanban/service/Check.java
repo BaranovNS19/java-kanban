@@ -5,8 +5,8 @@ import com.yandex.kanban.model.Status;
 import com.yandex.kanban.model.Subtask;
 import com.yandex.kanban.model.Task;
 
-import java.util.HashMap;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Check {
     private Check() {
@@ -82,6 +82,63 @@ public class Check {
         }
         return Status.IN_PROGRESS;
 
+    }
+
+    public static boolean checkStartTime(LocalDateTime localDateTime) {
+        boolean result = localDateTime.isAfter(LocalDateTime.now());
+        if (!result) {
+            System.out.println("Дата начала задачи не может быть в прошлом времени " + localDateTime);
+        }
+        return result;
+    }
+
+    /*public static boolean checkStartTimeIntersection(TreeSet<Task> treeSet, Task task) {
+        if (task.getStartTime() != null && task.getEndTime() != null) {
+            boolean hasIntersection = treeSet.stream()
+                    .anyMatch(t -> task.getStartTime().isBefore(t.getEndTime()) && task.getEndTime().isAfter(t.getStartTime()));
+
+            if (hasIntersection) {
+                System.out.println("Задачи пересекаются по времени!");
+            }
+            return !hasIntersection;
+        } else {
+            return true;
+        }
+    }*/
+
+
+
+    public static boolean checkStartTimeIntersection(Calendar calendar, Task task) {
+        if (task.getStartTime() != null && task.getEndTime() != null) {
+            if (checkCalendarBoundaries(calendar, task)) {
+                for (TimeInterval t : calendar.getCalendar().keySet()) {
+                    if (t.intersect(new TimeInterval(task.getStartTime(), task.getEndTime()))) {
+                        if (calendar.getCalendar().get(t)) {
+                            calendar.getCalendar().put(t, false);
+                        } else {
+                            System.out.println("Задачи пересекаются по времени!");
+                            return false;
+                        }
+                    }
+
+                }
+            } else {
+                System.out.println("Планирование возможно с " + calendar.getStartCalendar() + " по "
+                        + calendar.getEndCalendar() + " интервал задачи с " + task.getStartTime() + " по "
+                        + task.getEndTime());
+                return false;
+            }
+            return true;
+        }
+        return true;
+    }
+
+
+    private static boolean checkCalendarBoundaries(Calendar calendar, Task task) {
+        return task.getStartTime().isEqual(calendar.getStartCalendar())
+                || task.getStartTime().isAfter(calendar.getEndCalendar())
+                && task.getEndTime().isEqual(calendar.getEndCalendar())
+                || task.getEndTime().isBefore(calendar.getEndCalendar());
     }
 
 }
