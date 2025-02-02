@@ -51,8 +51,8 @@ public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
                     if (manager.addEpic(epic) != 0) {
                         sendTextCreated(exchange, gson.toJson(epic));
                     } else {
-                        sendText(exchange, generateErrorMessage("Эпик с таким названием уже существует!")
-                                , 400);
+                        sendText(exchange, generateErrorMessage("Эпик с таким названием уже существует!"),
+                                400);
                     }
                 }
                 break;
