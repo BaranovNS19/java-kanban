@@ -47,8 +47,8 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
                         if (!Check.checkStartTimeIntersection(manager.getCalendar(), task)) {
                             sendHasInteractions(exchange, generateErrorMessage("Задачи пересекаются по времени!"));
                         } else {
-                            sendText(exchange, generateErrorMessage("Задача с таким названием уже существует!")
-                                    , 400);
+                            sendText(exchange, generateErrorMessage("Задача с таким названием уже существует!"),
+                                    400);
                         }
                     }
 
