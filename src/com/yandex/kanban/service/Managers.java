@@ -1,11 +1,17 @@
 package com.yandex.kanban.service;
 
 public class Managers<T extends TaskManager> {
-    public TaskManager getDefault() {
-        return null;
+    private final T manager;
+
+    public Managers(T manager) {
+        this.manager = manager;
     }
 
-    public static HistoryManager getDefaultHistory() {
+    public TaskManager getDefault() {
+        return manager;
+    }
+
+    public HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
     }
 }
