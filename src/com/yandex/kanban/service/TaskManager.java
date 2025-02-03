@@ -51,5 +51,11 @@ public interface TaskManager {
 
     ArrayList<Subtask> getSubtaskByEpic(Epic epic);
 
-   // List<Task> getHistory();
+    Calendar getCalendar();
+
+    HistoryManager getInMemoryHistoryManager();
+
+    Object getPrioritizedTasks();
+
+    // List<Task> getHistory();
 }

@@ -1,6 +1,9 @@
-1,TASK,New,null,по работать,,null,null
-5,TASK,Поход,null,Купить хлеб,,null,null
-6,TASK,Очень новая,NEW,Задача,,null,null
-2,EPIC,История,NEW,Яндекс,,null,null
-3,EPIC,NEW Эпик,NEW,ЭПИК,,null,null
-4,SUBTASK,НОВАЯ ПОДЗАДАЧА2,NEW,ПОДЗАДАЧА,3,null,null
+1,TASK,Поход,null,Купить хлеб,,null,null
+2,TASK,SECOND,null,Задача,,null,null
+3,TASK,SECOND2,null,Задача,,null,null
+4,TASK,testName,null,testDescription,,null,null
+8,TASK,fix,null,Задача,,null,null
+9,TASK,fix2,NEW,описание,,2025-05-10T04:47:08,PT30M
+5,EPIC,EPIC23/////-----123,NEW,epic,,null,null
+6,SUBTASK,ооооооо34sdfsdf,NEW,эпика,5,null,null
+7,SUBTASK,ооооооо34sdfsdfл,NEW,эпика,5,null,null

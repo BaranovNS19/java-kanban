@@ -27,6 +27,10 @@ public class InMemoryTaskManager implements TaskManager {
         return inMemoryHistoryManager;
     }
 
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
     @Override
     public int addTask(Task task) {
         if (Check.checkTask(tasks, task)) {
@@ -195,15 +199,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        inMemoryHistoryManager.add(tasks.get(id));
-        return tasks.get(id);
+        if (tasks.containsKey(id)) {
+            inMemoryHistoryManager.add(tasks.get(id));
+            return tasks.get(id);
+        }
+        return null;
     }
 
     @Override
     public Epic getEpicById(int id) {
         if (epics.containsKey(id)) {
             inMemoryHistoryManager.add(epics.get(id));
-
             return epics.get(id);
         }
         return null;
@@ -211,8 +217,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtaskById(int id) {
-        inMemoryHistoryManager.add(subtasks.get(id));
-        return subtasks.get(id);
+        if (subtasks.containsKey(id)) {
+            inMemoryHistoryManager.add(subtasks.get(id));
+            return subtasks.get(id);
+        }
+        return null;
     }
 
     @Override
