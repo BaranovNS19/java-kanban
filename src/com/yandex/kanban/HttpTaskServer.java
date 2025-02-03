@@ -3,7 +3,6 @@ package com.yandex.kanban;
 import com.sun.net.httpserver.HttpServer;
 import com.yandex.kanban.api.*;
 import com.yandex.kanban.service.FileBackedTaskManager;
-import com.yandex.kanban.service.Managers;
 import com.yandex.kanban.service.TaskManager;
 
 import java.io.File;
@@ -14,13 +13,12 @@ public class HttpTaskServer {
     private final HttpServer server;
 
     public HttpTaskServer(TaskManager manager) throws IOException {
-        Managers<TaskManager> managers = new Managers<>(manager);
         server = HttpServer.create(new InetSocketAddress(8080), 0);
-        server.createContext("/tasks", new TaskHttpHandler(managers.getDefault()));
-        server.createContext("/epics", new EpicHttpHandler(managers.getDefault()));
-        server.createContext("/subtasks", new SubtaskHttpHandler(managers.getDefault()));
-        server.createContext("/history", new HistoryHttpHandler(managers.getDefault()));
-        server.createContext("/prioritized", new PrioritizedHttpHandler(managers.getDefault()));
+        server.createContext("/tasks", new TaskHttpHandler(manager));
+        server.createContext("/epics", new EpicHttpHandler(manager));
+        server.createContext("/subtasks", new SubtaskHttpHandler(manager));
+        server.createContext("/history", new HistoryHttpHandler(manager));
+        server.createContext("/prioritized", new PrioritizedHttpHandler(manager));
     }
 
     public static void main(String[] args) throws IOException {

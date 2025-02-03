@@ -25,44 +25,32 @@ public class BaseHttpHandler {
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
 
-    protected void sendText(HttpExchange exchange, String text) throws IOException {
-        byte[] response = text.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(200, 0);
-        exchange.getResponseBody().write(response);
-        exchange.close();
-    }
-
-    protected void sendNotFound(HttpExchange exchange, String text) throws IOException {
-        byte[] response = text.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(404, 0);
-        exchange.getResponseBody().write(response);
-        exchange.close();
-    }
-
-    protected void sendHasInteractions(HttpExchange exchange, String text) throws IOException {
-        byte[] response = text.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(406, 0);
-        exchange.getResponseBody().write(response);
-        exchange.close();
-    }
-
-    protected void sendTextCreated(HttpExchange exchange, String text) throws IOException {
-        byte[] response = text.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
-        exchange.sendResponseHeaders(201, 0);
-        exchange.getResponseBody().write(response);
-        exchange.close();
-    }
-
-    protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException {
+    private void performBasicSettings(HttpExchange exchange, String text, int statusCode) throws IOException {
         byte[] response = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
         exchange.sendResponseHeaders(statusCode, 0);
         exchange.getResponseBody().write(response);
         exchange.close();
+    }
+
+    protected void sendText(HttpExchange exchange, String text) throws IOException {
+        performBasicSettings(exchange, text, 200);
+    }
+
+    protected void sendNotFound(HttpExchange exchange, String text) throws IOException {
+        performBasicSettings(exchange, text, 404);
+    }
+
+    protected void sendHasInteractions(HttpExchange exchange, String text) throws IOException {
+        performBasicSettings(exchange, text, 406);
+    }
+
+    protected void sendTextCreated(HttpExchange exchange, String text) throws IOException {
+        performBasicSettings(exchange, text, 201);
+    }
+
+    protected void sendText(HttpExchange exchange, String text, int statusCode) throws IOException {
+        performBasicSettings(exchange, text, statusCode);
     }
 
     protected String generateErrorMessage(String text) {
@@ -71,7 +59,8 @@ public class BaseHttpHandler {
 
     protected int getIdFromUrl(URI uri) {
         String[] pathSplit = uri.getPath().split("/");
-        if (pathSplit[2] != null && pathSplit[2].matches("\\d+")) {
+        if (pathSplit[2] != null && pathSplit[2].matches("\\d+") &&
+                (pathSplit.length == 3 || pathSplit.length == 4)) {
             return Integer.parseInt(pathSplit[2]);
         }
         return 0;
